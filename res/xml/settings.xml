@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+	<PreferenceCategory
+		android:title="@string/settings_category_title_package_delivery">        
+        <CheckBoxPreference
+        	android:key="package_delivery"
+        	android:title="@string/settings_title_package_delivery"
+            android:summary="@string/settings_summary_package_delivery"             
+            android:defaultValue="true">
+        </CheckBoxPreference>        
+        <ListPreference 
+            android:key="update_time"
+            android:title="@string/settings_title_update_time"
+            android:summary="@string/settings_summary_update_time"
+            android:defaultValue="120000" 
+            android:entries="@array/update_interval"
+            android:entryValues="@array/update_interval_values"
+            android:dependency="package_delivery">
+        </ListPreference>           
+    </PreferenceCategory>        
+</PreferenceScreen>
+
+
+

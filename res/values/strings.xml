@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>    
+    <string name="app_name">VizionGps</string>
+    <string name="settings_category_title_package_delivery">Package delivery</string>
+    <string name="settings_title_package_delivery">Enable</string>
+    <string name="settings_summary_package_delivery">Enable or Disable package delivery</string>
+    <string name="settings_title_update_time">Updates interval</string>
+    <string name="settings_summary_update_time">Define how often updates will be performed</string>  
+    <string name="menu_settings">Settings</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="on">On</string>
+    <string name="off">Off</string>
+    <string name="enable">Enable</string>
+    <string name="disable">Disable</string>
+    <string name="no_data">No Data</string>
+    <string name="vizion_gps_btn_panic">Panic</string>  
+    <string name="vizion_gps_btn_police">Police</string>
+    <string name="vizion_gps_btn_mechanic">Mechanic</string>
+</resources>
