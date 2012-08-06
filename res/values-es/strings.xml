@@ -25,4 +25,5 @@
     <string name="vizion_gps_btn_police">Policía</string>
     <string name="vizion_gps_btn_mechanic">Mecánico</string>
     <string name="vizion_gps_no_gps">Sin señal GPS</string>
+    <string name="vizion_gps_turn_on">Activar entrega de paquetes</string>
 </resources>

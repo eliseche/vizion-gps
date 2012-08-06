@@ -32,6 +32,6 @@
             android:key="equipment"
             android:title="@string/settings_title_equipment"
             android:summary="@string/settings_summary_eqipment"
-            android:defaultValue="9999" />              
+            android:defaultValue="9993" />              
     </PreferenceCategory>      
 </PreferenceScreen>

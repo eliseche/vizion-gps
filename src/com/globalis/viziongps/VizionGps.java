@@ -1,7 +1,6 @@
 package com.globalis.viziongps;
 
 import com.globalis.viziongps.Sender.ReportType;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -21,7 +20,7 @@ import android.widget.Toast;
 
 public class VizionGps extends Activity implements LocationListener, OnClickListener {	
 	private LocationManager locationManager;	
-	private Location location;
+	private Location location = null;
 	private Sender sender = new Sender();
 			
     /** Called when the activity is first created. */
@@ -36,7 +35,7 @@ public class VizionGps extends Activity implements LocationListener, OnClickList
         buttonPanic.setOnClickListener(this);
         Button buttonPolice = (Button)findViewById(R.id.vizion_gps_btn_police);
         buttonPolice.setOnClickListener(this);
-        Button buttonMechanic= (Button)findViewById(R.id.vizion_gps_btn_mechanic);
+        Button buttonMechanic = (Button)findViewById(R.id.vizion_gps_btn_mechanic);
         buttonMechanic.setOnClickListener(this);
         
         locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
@@ -92,41 +91,78 @@ public class VizionGps extends Activity implements LocationListener, OnClickList
 
 	@Override
 	public void onClick(View v) {
-		switch(v.getId()) {
-		case R.id.vizion_gps_btn_panic:
-			if(location != null) {
-				sender.send(ReportType.PANIC);
-			}
-			else {
-				Toast.makeText(getApplicationContext(), getResources().getString(R.string.vizion_gps_no_gps), Toast.LENGTH_SHORT).show();
-			}
-			break;
-		case R.id.vizion_gps_btn_police:
-			if(location != null) {
-				sender.send(ReportType.POLICE);
-			}
-			else {
-				Toast.makeText(getApplicationContext(), getResources().getString(R.string.vizion_gps_no_gps), Toast.LENGTH_SHORT).show();				
-			}
-			break;
-		case R.id.vizion_gps_btn_mechanic:
-			if(location != null) {
-				sender.send(ReportType.MECHANIC);
-			}
-			else {
-				Toast.makeText(getApplicationContext(), getResources().getString(R.string.vizion_gps_no_gps), Toast.LENGTH_SHORT).show();				
-			}
-			break;
-		default:
-			break;		
-		}	
+		/*SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+		Boolean deliveryEnabled = sp.getBoolean("package_delivery", false);
+		if(deliveryEnabled) {*/		
+			switch(v.getId()) {		
+			case R.id.vizion_gps_btn_panic:
+				//if(location != null) {
+				Thread threadPanic = new Thread() {
+					@Override
+					public void run() {
+						try {
+							sender.send(ReportType.PANIC);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				};
+				threadPanic.start();
+				/*}
+				else {
+					Toast.makeText(getApplicationContext(), getResources().getString(R.string.vizion_gps_no_gps), Toast.LENGTH_SHORT).show();
+				}*/
+				break;
+			case R.id.vizion_gps_btn_police:
+				//if(location != null) {
+				Thread threadPolice = new Thread() {
+					@Override
+					public void run() {
+						try {
+							sender.send(ReportType.POLICE);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				};
+				threadPolice.start();
+				/*}
+				else {
+					Toast.makeText(getApplicationContext(), getResources().getString(R.string.vizion_gps_no_gps), Toast.LENGTH_SHORT).show();				
+				}*/
+				break;
+			case R.id.vizion_gps_btn_mechanic:
+				//if(location != null) {
+				Thread threadMechanic = new Thread() {
+					@Override
+					public void run() {
+						try {
+							sender.send(ReportType.MECHANIC);
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				};
+				threadMechanic.start();
+				/*}
+				else {
+					Toast.makeText(getApplicationContext(), getResources().getString(R.string.vizion_gps_no_gps), Toast.LENGTH_SHORT).show();				
+				}*/
+				break;
+			default:
+				break;		
+			}	
+		/*}
+		else {
+			Toast.makeText(getApplicationContext(), getResources().getString(R.string.vizion_gps_turn_on), Toast.LENGTH_SHORT).show();
+		}*/
 	}
 	
 	private void fillRemoteData() {
 		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());		
 		String server = sp.getString("server", "200.80.220.10");
 		String port = sp.getString("port", "9999");
-		String equipment = sp.getString("equipment", "9999");
+		String equipment = sp.getString("equipment", "9993");
 		ServerData.setServer(server);
 		ServerData.setPort(port);
 		ServerData.setEquipment(equipment);

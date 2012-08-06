@@ -25,4 +25,5 @@
     <string name="vizion_gps_btn_police">Police</string>
     <string name="vizion_gps_btn_mechanic">Mechanic</string>
     <string name="vizion_gps_no_gps">No GPS signal</string>
+    <string name="vizion_gps_turn_on">Turn on package delivery</string>
 </resources>
