@@ -1,31 +1,48 @@
 package com.globalis.viziongps;
 
+import com.globalis.viziongps.Sender.ReportType;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.Toast;
 
 public class VizionGps extends Activity implements LocationListener, OnClickListener {	
-	private LocationManager locationManager;		
+	private LocationManager locationManager;	
+	private Location location;
+	private Sender sender = new Sender();
 			
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.vizion_gps);       
+        setContentView(R.layout.vizion_gps);
+        
+        fillRemoteData();
+        
+        Button buttonPanic = (Button)findViewById(R.id.vizion_gps_btn_panic);
+        buttonPanic.setOnClickListener(this);
+        Button buttonPolice = (Button)findViewById(R.id.vizion_gps_btn_police);
+        buttonPolice.setOnClickListener(this);
+        Button buttonMechanic= (Button)findViewById(R.id.vizion_gps_btn_mechanic);
+        buttonMechanic.setOnClickListener(this);
         
         locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
     	//Get last known position
         updateLocation(locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER));
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 60000, 50, this);
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
     }
     
 	@Override
@@ -69,18 +86,49 @@ public class VizionGps extends Activity implements LocationListener, OnClickList
 	private void updateLocation(Location location) {
 		if(location != null) {			
 			GpsData.setLatLon(location.getLatitude(), location.getLongitude());
-			//mapLocation = new MapLocation(Math.round(location.getLatitude() * 100.0) / 100.0 + ", " + Math.round(location.getLongitude() * 100.0) / 100.0, location.getLatitude(), location.getLongitude());			
+			this.location = location;			
 		}		
 	}
 
 	@Override
 	public void onClick(View v) {
 		switch(v.getId()) {
-		case 1:
-			
+		case R.id.vizion_gps_btn_panic:
+			if(location != null) {
+				sender.send(ReportType.PANIC);
+			}
+			else {
+				Toast.makeText(getApplicationContext(), getResources().getString(R.string.vizion_gps_no_gps), Toast.LENGTH_SHORT).show();
+			}
+			break;
+		case R.id.vizion_gps_btn_police:
+			if(location != null) {
+				sender.send(ReportType.POLICE);
+			}
+			else {
+				Toast.makeText(getApplicationContext(), getResources().getString(R.string.vizion_gps_no_gps), Toast.LENGTH_SHORT).show();				
+			}
+			break;
+		case R.id.vizion_gps_btn_mechanic:
+			if(location != null) {
+				sender.send(ReportType.MECHANIC);
+			}
+			else {
+				Toast.makeText(getApplicationContext(), getResources().getString(R.string.vizion_gps_no_gps), Toast.LENGTH_SHORT).show();				
+			}
 			break;
 		default:
 			break;		
 		}	
+	}
+	
+	private void fillRemoteData() {
+		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());		
+		String server = sp.getString("server", "200.80.220.10");
+		String port = sp.getString("port", "9999");
+		String equipment = sp.getString("equipment", "9999");
+		ServerData.setServer(server);
+		ServerData.setPort(port);
+		ServerData.setEquipment(equipment);
 	}
 }

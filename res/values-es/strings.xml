@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>    
+    <string name="app_name">VizionGps</string>        
+    <string name="settings_category_title_package_delivery">Entrega de paquetes</string>
+    <string name="settings_title_package_delivery">Activar</string>
+    <string name="settings_summary_package_delivery">Activa o Desactiva la entrega de paquetes</string>
+    <string name="settings_title_update_time">Intervalo de tiempo</string>
+    <string name="settings_summary_update_time">Especifica cada cuanto tiempo se envía</string>
+    <string name="settings_category_title_server">Server</string>  
+    <string name="settings_title_server">Server</string>
+    <string name="settings_summary_server">Define URL del servidor</string>
+    <string name="settings_title_port">Puerto</string>
+    <string name="settings_summary_port">Define puerto del servidor</string>
+    <string name="settings_title_equipment">Equipo</string>
+    <string name="settings_summary_eqipment">Define el ID del equipo</string>   	
+    <string name="menu_settings">Opciones</string>
+    <string name="yes">Si</string>
+    <string name="no">No</string>
+    <string name="on">Encendido</string>
+    <string name="off">Apagado</string>
+    <string name="enable">Activo</string>
+    <string name="disable">No Activo</string>
+    <string name="no_data">Sin datos</string>
+    <string name="vizion_gps_btn_panic">Pánico</string>  
+    <string name="vizion_gps_btn_police">Policía</string>
+    <string name="vizion_gps_btn_mechanic">Mecánico</string>
+    <string name="vizion_gps_no_gps">Sin señal GPS</string>
+</resources>

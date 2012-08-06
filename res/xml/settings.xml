@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-	<PreferenceCategory
-		android:title="@string/settings_category_title_package_delivery">        
+	<PreferenceCategory android:title="@string/settings_category_title_package_delivery">        
         <CheckBoxPreference
         	android:key="package_delivery"
         	android:title="@string/settings_title_package_delivery"
@@ -17,8 +16,22 @@
             android:entryValues="@array/update_interval_values"
             android:dependency="package_delivery">
         </ListPreference>           
-    </PreferenceCategory>        
+    </PreferenceCategory>  
+    <PreferenceCategory android:title="@string/settings_category_title_server">
+        <EditTextPreference
+            android:key="server"
+            android:title="@string/settings_title_server"
+            android:summary="@string/settings_summary_server"
+            android:defaultValue="200.80.220.10" />
+         <EditTextPreference
+            android:key="port"
+            android:title="@string/settings_title_port"
+            android:summary="@string/settings_summary_port"
+            android:defaultValue="9999" />    
+          <EditTextPreference
+            android:key="equipment"
+            android:title="@string/settings_title_equipment"
+            android:summary="@string/settings_summary_eqipment"
+            android:defaultValue="9999" />              
+    </PreferenceCategory>      
 </PreferenceScreen>
-
-
-
