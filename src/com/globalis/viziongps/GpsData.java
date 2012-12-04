@@ -1,28 +1,40 @@
 package com.globalis.viziongps;
 
 public class GpsData {
-	private static double latitude;
-	private static double longitude;
-	private static double altitude;
+	private static GpsData instance = null;	
+	private double latitude;
+	private double longitude;
+	private double altitude;
 	
-	public static double getLatitude() {
+	private static void createInstance() {
+		if (instance == null) {
+			instance = new GpsData();
+		}
+	}
+	
+	public static GpsData getInstance() {
+		createInstance();
+		return instance;		
+	}
+	
+	public double getLatitude() {
 		return latitude;
 	}
 	
-	public static double getLongitude() {
+	public double getLongitude() {
 		return longitude;
 	}
 	
-	public static double getAltitude() {
+	public double getAltitude() {
 		return altitude;
 	}
 	
-	public static void setLatLon(double latitude, double longitude) {
-		GpsData.latitude = latitude;
-		GpsData.longitude = longitude;
+	public void setLatLon(double latitude, double longitude) {
+		this.latitude = latitude;
+		this.longitude = longitude;
 	}
 	
-	public static void setAltitude(double altitude) {
-		GpsData.altitude = altitude;
+	public void setAltitude(double altitude) {
+		this.altitude = altitude;
 	}
 }

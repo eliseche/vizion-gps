@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.widget.Toast;
 
 public class GpsService extends Service {
 	private Timer timer = new Timer();
@@ -20,16 +21,16 @@ public class GpsService extends Service {
 	
 	@Override
 	public void onCreate() {		
-		//Toast.makeText(this, "GPS Service created.", Toast.LENGTH_SHORT).show();
+		Toast.makeText(this, "GPS Service created.", Toast.LENGTH_SHORT).show();
 		Log.i("GpsService", "Created");
-		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
+		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 		String updateInterval = sp.getString("update_time", "120000");	
 		this.executionTime = Integer.valueOf(updateInterval);
 	}
 	
 	@Override
 	public void onDestroy() {		
-		//Toast.makeText(this, "GPS Service destroyed.", Toast.LENGTH_SHORT).show();
+		Toast.makeText(this, "GPS Service destroyed.", Toast.LENGTH_SHORT).show();
 		Log.i("GpsService", "Destroyed");
 		if(timer != null) {
 			timer.cancel();
@@ -37,13 +38,13 @@ public class GpsService extends Service {
 	}
 	
 	@Override
-	public void onStart(Intent intent, int startId) {		
+	public void onStart(Intent intent, int startId) {	
 		timer.scheduleAtFixedRate(new TimerTask() {			
 			@Override
-			public void run() {							 
+			public void run() {
 				Sender sender = new Sender();
 				sender.run();
 			}
-		}, executionTime, executionTime);
+		}, 60000, executionTime);		
 	}
 }

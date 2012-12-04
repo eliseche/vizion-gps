@@ -5,7 +5,7 @@
         	android:key="package_delivery"
         	android:title="@string/settings_title_package_delivery"
             android:summary="@string/settings_summary_package_delivery"             
-            android:defaultValue="true">
+            android:defaultValue="false">
         </CheckBoxPreference>        
         <ListPreference 
             android:key="update_time"
@@ -17,7 +17,7 @@
             android:dependency="package_delivery">
         </ListPreference>           
     </PreferenceCategory>  
-    <PreferenceCategory android:title="@string/settings_category_title_server">
+    <!--<PreferenceCategory android:title="@string/settings_category_title_server">
         <EditTextPreference
             android:key="server"
             android:title="@string/settings_title_server"
@@ -33,5 +33,5 @@
             android:title="@string/settings_title_equipment"
             android:summary="@string/settings_summary_eqipment"
             android:defaultValue="9993" />              
-    </PreferenceCategory>      
+    </PreferenceCategory>-->      
 </PreferenceScreen>

@@ -9,12 +9,19 @@ import java.util.TimeZone;
 import android.util.Log;
 
 public class Sender implements Runnable {
+	private GpsData gpsData;
+	private GlobalConfiguration globalConfiguration;
 	private boolean gpsValid = false;
+	
+	public Sender() {
+		gpsData = GpsData.getInstance();
+		globalConfiguration = GlobalConfiguration.getInstance();
+	}
 	
 	public enum ReportType {
 		AUTO,
 		PANIC,
-		POLICE,
+		MEDICAL,
 		MECHANIC
 	}
 	
@@ -32,7 +39,7 @@ public class Sender implements Runnable {
 			String latitude;
 			String longitude;
 			
-			double lat = GpsData.getLatitude();
+			double lat = gpsData.getLatitude();
 			if(lat != 0) {
 				latitude = String.valueOf(lat).replace(".", "").substring(0, 8);	
 				gpsValid = true;
@@ -42,7 +49,7 @@ public class Sender implements Runnable {
 				gpsValid = false;
 			}
 			
-			double lon = GpsData.getLongitude();
+			double lon = gpsData.getLongitude();
 			if(lon != 0) {
 				longitude = new StringBuffer(String.valueOf(lon).replace(".", "").substring(0, 8)).insert(1, 0).toString();
 				gpsValid = true;
@@ -59,33 +66,34 @@ public class Sender implements Runnable {
 			String data = "";
 			if(reportType == ReportType.AUTO) {
 				if(gpsValid)
-					data = ">RGP" + date + latitude + longitude + "000000300FF0000;ID=" + ServerData.getEquipment() + ";#0001;*FF<";
+					data = ">RGP" + date + latitude + longitude + "000000300FF0000;ID=" + globalConfiguration.getEquipment() + ";#0001;*FF<";
 				else 
-					data = ">RGP" + date + latitude + longitude + "0000000FFFF0000;ID=" + ServerData.getEquipment() + ";#0001;*FF<";
+					data = ">RGP" + date + latitude + longitude + "0000000FFFF0000;ID=" + globalConfiguration.getEquipment() + ";#0001;*FF<";
 			}
 			else if (reportType == ReportType.PANIC) {
 				if(gpsValid)
-					data = ">RGP" + date + latitude + longitude + "000000300FF0100;ID=" + ServerData.getEquipment() + ";#0001;*FF<";
+					data = ">RGP" + date + latitude + longitude + "000000300FF0100;ID=" + globalConfiguration.getEquipment() + ";#0001;*FF<";
 				else 
-					data = ">RGP" + date + latitude + longitude + "0000000FFFF0100;ID=" + ServerData.getEquipment() + ";#0001;*FF<";
+					data = ">RGP" + date + latitude + longitude + "0000000FFFF0100;ID=" + globalConfiguration.getEquipment() + ";#0001;*FF<";
 			}
-			else if (reportType == ReportType.POLICE) {
+			else if (reportType == ReportType.MEDICAL) {
 				if(gpsValid)
-					data = ">RGP" + date + latitude + longitude + "000000300FF0200;ID=" + ServerData.getEquipment() + ";#0001;*FF<";
+					data = ">RGP" + date + latitude + longitude + "000000300FF0200;ID=" + globalConfiguration.getEquipment() + ";#0001;*FF<";
 				else 
-					data = ">RGP" + date + latitude + longitude + "0000000FFFF0200;ID=" + ServerData.getEquipment() + ";#0001;*FF<";
+					data = ">RGP" + date + latitude + longitude + "0000000FFFF0200;ID=" + globalConfiguration.getEquipment() + ";#0001;*FF<";
 			}
 			else if (reportType == ReportType.MECHANIC) {
 				if(gpsValid)
-					data = ">RGP" + date + latitude + longitude + "000000300FF0300;ID=" + ServerData.getEquipment() + ";#0001;*FF<";
+					data = ">RGP" + date + latitude + longitude + "000000300FF0300;ID=" + globalConfiguration.getEquipment() + ";#0001;*FF<";
 				else
-					data = ">RGP" + date + latitude + longitude + "0000000FFFF0300;ID=" + ServerData.getEquipment() + ";#0001;*FF<";
+					data = ">RGP" + date + latitude + longitude + "0000000FFFF0300;ID=" + globalConfiguration.getEquipment() + ";#0001;*FF<";
 			}
 						
 			byte[] dataBytes = data.getBytes();			
-			InetAddress serverAddress = InetAddress.getByName(ServerData.getServer());
-			DatagramSocket socket = new DatagramSocket();			
-			DatagramPacket packet = new DatagramPacket(dataBytes, dataBytes.length, serverAddress, Integer.valueOf(ServerData.getPort()));
+			InetAddress serverAddress = InetAddress.getByName(globalConfiguration.getServer());
+			DatagramSocket socket = new DatagramSocket();	
+			socket.setSoTimeout(60000);
+			DatagramPacket packet = new DatagramPacket(dataBytes, dataBytes.length, serverAddress, Integer.valueOf(globalConfiguration.getPort()));
 			Log.d("Sender", "Sending: " + data);
 			socket.send(packet);
 			Log.d("Sender", "Done");

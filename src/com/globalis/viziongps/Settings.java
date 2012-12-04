@@ -7,9 +7,7 @@ import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 
-public class Settings extends PreferenceActivity {	
-	private Intent registerService;
-	
+public class Settings extends PreferenceActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {	
 		super.onCreate(savedInstanceState);
@@ -19,26 +17,32 @@ public class Settings extends PreferenceActivity {
 		checkboxPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {			
 			@Override
 			public boolean onPreferenceChange(Preference preference, Object newValue) {
-				if(newValue.toString().equals("true")) {			
-					registerService = new Intent(getApplicationContext(), GpsService.class);
-			    	startService(registerService);		        			
+				if(newValue.toString().equals("true")) {
+			    	startService(new Intent(getApplicationContext(), GpsService.class));		        			
 				}
 				else {
 					stopService(new Intent(getApplicationContext(), GpsService.class));			
 				}
 				return true;				
 			}
-		});	
+		});
 		
-		ListPreference updateTime = (ListPreference)getPreferenceManager().findPreference("update_time");
-        updateTime.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-        	@Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {       
-                stopService(new Intent(getApplicationContext(), GpsService.class));  
-                registerService = new Intent(getApplicationContext(), GpsService.class);
-        		startService(registerService);                
-                return true;
-            }
-        });
+		ListPreference listPreference = (ListPreference)getPreferenceManager().findPreference("update_time");
+		listPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {		
+			@Override
+			public boolean onPreferenceChange(Preference preference, Object newValue) {
+				String oldValue = ((ListPreference)preference).getValue();
+				if (newValue != oldValue) {
+					stopService(new Intent(getApplicationContext(), GpsService.class));
+					try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+					startService(new Intent(getApplicationContext(), GpsService.class));
+				}
+				return true;
+			}
+		});
 	}
 }

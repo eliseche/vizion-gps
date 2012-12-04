@@ -16,12 +16,17 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.Toast;
 
-public class VizionGps extends Activity implements LocationListener, OnClickListener {	
+public class VizionGps extends Activity implements LocationListener, OnClickListener {
+	private GpsData gpsData;
+	private GlobalConfiguration globalConfiguration;
 	private LocationManager locationManager;	
-	private Location location = null;
-	private Sender sender = new Sender();
+	private Sender sender = new Sender();	
+	
+	public VizionGps() {
+		gpsData = GpsData.getInstance();
+        globalConfiguration = GlobalConfiguration.getInstance();
+	}	
 			
     /** Called when the activity is first created. */
     @Override
@@ -29,19 +34,9 @@ public class VizionGps extends Activity implements LocationListener, OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.vizion_gps);
         
-        fillRemoteData();
-        
-        Button buttonPanic = (Button)findViewById(R.id.vizion_gps_btn_panic);
-        buttonPanic.setOnClickListener(this);
-        Button buttonPolice = (Button)findViewById(R.id.vizion_gps_btn_police);
-        buttonPolice.setOnClickListener(this);
-        Button buttonMechanic = (Button)findViewById(R.id.vizion_gps_btn_mechanic);
-        buttonMechanic.setOnClickListener(this);
-        
-        locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-    	//Get last known position
-        updateLocation(locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER));
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+        initViews();
+        fillRemoteData();        
+        initGps();   
     }
     
 	@Override
@@ -83,88 +78,82 @@ public class VizionGps extends Activity implements LocationListener, OnClickList
 	}
 	
 	private void updateLocation(Location location) {
-		if(location != null) {			
-			GpsData.setLatLon(location.getLatitude(), location.getLongitude());
-			this.location = location;			
+		if(location != null) {		
+			gpsData.setLatLon(location.getLatitude(), location.getLongitude());					
 		}		
 	}
 
 	@Override
-	public void onClick(View v) {
-		/*SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-		Boolean deliveryEnabled = sp.getBoolean("package_delivery", false);
-		if(deliveryEnabled) {*/		
-			switch(v.getId()) {		
-			case R.id.vizion_gps_btn_panic:
-				//if(location != null) {
-				Thread threadPanic = new Thread() {
-					@Override
-					public void run() {
-						try {
-							sender.send(ReportType.PANIC);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
+	public void onClick(View v) {	
+		switch(v.getId()) {		
+		case R.id.vizion_gps_btn_panic:
+			Thread threadPanic = new Thread() {
+				@Override
+				public void run() {					
+					try {
+						sender.send(ReportType.PANIC);
+					} catch (Exception e) {
+						e.printStackTrace();
 					}
-				};
-				threadPanic.start();
-				/*}
-				else {
-					Toast.makeText(getApplicationContext(), getResources().getString(R.string.vizion_gps_no_gps), Toast.LENGTH_SHORT).show();
-				}*/
-				break;
-			case R.id.vizion_gps_btn_police:
-				//if(location != null) {
-				Thread threadPolice = new Thread() {
-					@Override
-					public void run() {
-						try {
-							sender.send(ReportType.POLICE);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
+				}
+			};
+			threadPanic.start();				
+			break;
+		case R.id.vizion_gps_btn_medical:
+			Thread threadPolice = new Thread() {
+				@Override
+				public void run() {
+					try {
+						sender.send(ReportType.MEDICAL);
+					} catch (Exception e) {
+						e.printStackTrace();
 					}
-				};
-				threadPolice.start();
-				/*}
-				else {
-					Toast.makeText(getApplicationContext(), getResources().getString(R.string.vizion_gps_no_gps), Toast.LENGTH_SHORT).show();				
-				}*/
-				break;
-			case R.id.vizion_gps_btn_mechanic:
-				//if(location != null) {
-				Thread threadMechanic = new Thread() {
-					@Override
-					public void run() {
-						try {
-							sender.send(ReportType.MECHANIC);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
+				}
+			};
+			threadPolice.start();				
+			break;
+		case R.id.vizion_gps_btn_mechanic:
+			Thread threadMechanic = new Thread() {
+				@Override
+				public void run() {
+					try {
+						sender.send(ReportType.MECHANIC);
+					} catch (Exception e) {
+						e.printStackTrace();
 					}
-				};
-				threadMechanic.start();
-				/*}
-				else {
-					Toast.makeText(getApplicationContext(), getResources().getString(R.string.vizion_gps_no_gps), Toast.LENGTH_SHORT).show();				
-				}*/
-				break;
-			default:
-				break;		
-			}	
-		/*}
-		else {
-			Toast.makeText(getApplicationContext(), getResources().getString(R.string.vizion_gps_turn_on), Toast.LENGTH_SHORT).show();
-		}*/
+				}
+			};
+			threadMechanic.start();				
+			break;
+		default:
+			break;		
+		}
+	}
+	
+	private void initViews() {
+		Button buttonPanic = (Button)findViewById(R.id.vizion_gps_btn_panic);
+        buttonPanic.setOnClickListener(this);
+        Button buttonMedical = (Button)findViewById(R.id.vizion_gps_btn_medical);
+        buttonMedical.setOnClickListener(this);
+        Button buttonMechanic = (Button)findViewById(R.id.vizion_gps_btn_mechanic);
+        buttonMechanic.setOnClickListener(this);
 	}
 	
 	private void fillRemoteData() {
 		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getBaseContext());		
-		String server = sp.getString("server", "200.80.220.10");
-		String port = sp.getString("port", "9999");
-		String equipment = sp.getString("equipment", "9993");
-		ServerData.setServer(server);
-		ServerData.setPort(port);
-		ServerData.setEquipment(equipment);
+		String server = "200.80.220.10";/*sp.getString("server", "200.80.220.10");*/
+		String port = "9999";/*sp.getString("port", "9999");*/
+		String equipment = "9993"; /*sp.getString("equipment", "9993");*/
+		boolean packageDelivery = sp.getBoolean("package_delivery", false);
+		globalConfiguration.setServer(server);
+		globalConfiguration.setPort(port);
+		globalConfiguration.setEquipment(equipment);
+	}
+	
+	private void initGps() {
+		locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+    	//Get last known position
+        updateLocation(locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER));
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
 	}
 }

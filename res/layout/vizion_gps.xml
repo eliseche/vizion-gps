@@ -27,12 +27,12 @@
                 android:background="@drawable/button_red"
                 android:text="@string/vizion_gps_btn_panic" />
             <Button
-                android:id="@+id/vizion_gps_btn_police"
+                android:id="@+id/vizion_gps_btn_medical"
                 android:layout_width="fill_parent"
             	android:layout_height="wrap_content"
                 style="@style/customButton"                
                 android:background="@drawable/button_blue"
-                android:text="@string/vizion_gps_btn_police" />
+                android:text="@string/vizion_gps_btn_medical" />
             <Button
                 android:id="@+id/vizion_gps_btn_mechanic"
                 android:layout_width="fill_parent"

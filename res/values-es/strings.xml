@@ -14,6 +14,7 @@
     <string name="settings_title_equipment">Equipo</string>
     <string name="settings_summary_eqipment">Define el ID del equipo</string>   	
     <string name="menu_settings">Opciones</string>
+    <string name="exit">¿Está seguro que desea salir?</string>
     <string name="yes">Si</string>
     <string name="no">No</string>
     <string name="on">Encendido</string>
@@ -21,9 +22,9 @@
     <string name="enable">Activo</string>
     <string name="disable">No Activo</string>
     <string name="no_data">Sin datos</string>
-    <string name="vizion_gps_btn_panic">Pánico</string>  
-    <string name="vizion_gps_btn_police">Policía</string>
-    <string name="vizion_gps_btn_mechanic">Mecánico</string>
+    <string name="vizion_gps_btn_panic">Pánico</string>
+    <string name="vizion_gps_btn_mechanic">Mecánico</string>  
+    <string name="vizion_gps_btn_medical">Médico</string>    
     <string name="vizion_gps_no_gps">Sin señal GPS</string>
     <string name="vizion_gps_turn_on">Activar entrega de paquetes</string>
 </resources>
